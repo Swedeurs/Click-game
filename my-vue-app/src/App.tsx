@@ -49,12 +49,26 @@ function App() {
     }
   };
 
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'My Clicking Game',
+        text: `I scored ${count} clicks in ${(timer / 1000).toFixed(2)} seconds! Can you beat me?`,
+        url: window.location.href,
+      })
+      .then(() => console.log('Share successful'))
+      .catch((error) => console.error('Error sharing:', error));
+    } else {
+      alert('Sharing is not supported in this browser.');
+    }
+  };
+
   return (
     <>
       <div className="card" style={{ position: 'absolute', top: position.top, left: position.left }}>
         <Button count={count} onClick={handleClick} />
       </div>
-      {count > 0 && count < 10 && <div>Timer: {(timer / 1000).toFixed(2)}s</div>} {}
+      {count > 0 && count < 10 && <div>Timer: {(timer / 1000).toFixed(2)}s</div>}
       {count === 10 && (
         <>
           <div>Final Time: {(timer / 1000).toFixed(2)}s</div>
@@ -65,6 +79,19 @@ function App() {
             placeholder="Enter your name"
           />
           <button onClick={handleSubmit}>Submit Score</button>
+  
+          {}
+          <div>
+            <button onClick={() => window.open(`https://twitter.com/intent/tweet?text=I scored ${count} clicks in ${(timer / 1000).toFixed(2)} seconds! Can you beat me? ${window.location.href}`, '_blank')}>
+              Share on Twitter
+            </button>
+            <button onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}>
+              Share on Facebook
+            </button>
+            <button onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank')}>
+              Share on LinkedIn
+            </button>
+          </div>
         </>
       )}
       <button onClick={handleReset}>Reset</button>
@@ -78,6 +105,7 @@ function App() {
       </div>
     </>
   );
+  
 }
 
 export default App;
